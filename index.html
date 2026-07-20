@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Sands Real Estate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --accent: #d4af37; /* اللون الذهبي الفاخر ليناسب العقارات */
+            --accent-bg: #fcf8e3;
+            --dark: #1a1a1a;
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #fdfdfd;
+            color: var(--dark);
+            overflow-x: clip; 
+            cursor: none; 
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html.lenis-scrolling * {
+            pointer-events: none !important;
+        }
+
+        .bg-3d-grid {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
+            background-image: 
+                linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg) translate3d(0, -100px, -200px);
+            animation: gridMove 20s linear infinite;
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translate3d(0, 0, -200px); }
+            100% { transform: perspective(500px) rotateX(60deg) translate3d(0, 50px, -200px); }
+        }
+
+        .ambient-glow {
+            position: fixed; width: 600px; height: 600px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(212,175,55,0.06) 0%, rgba(255,255,255,0) 70%);
+            top: 0; left: 0; z-index: -1; pointer-events: none;
+            will-change: transform;
+            transform: translate3d(0,0,0);
+        }
+
+        .cursor-dot {
+            position: fixed; top: 0; left: 0; width: 10px; height: 10px;
+            background-color: var(--accent); border-radius: 50%;
+            pointer-events: none; z-index: 10000; 
+            mix-blend-mode: difference;
+            will-change: transform;
+            transform: translate3d(0,0,0);
+        }
+        .cursor-outline {
+            position: fixed; top: 0; left: 0; width: 50px; height: 50px;
+            border: 1px solid var(--accent); border-radius: 50%;
+            pointer-events: none; z-index: 9999;
+            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease;
+            will-change: transform, width, height;
+            transform: translate3d(0,0,0);
+        }
+
+        .perspective-1000 { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+        .translate-z-50 { transform: translate3d(0,0,50px); }
+        .translate-z-80 { transform: translate3d(0,0,80px); }
+        
+        .clip-text { overflow: hidden; display: inline-block; padding: 10px 0; margin-top: -10px; }
+        .clip-text span { display: inline-block; transform-origin: center bottom; will-change: transform; }
+
+        .glass-panel, .reveal-3d, .tilt-card {
+            transform: translate3d(0,0,0); 
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            will-change: transform, opacity;
+        }
+
+        .progress-bar-fill { width: 0; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #fdfdfd; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <div class="bg-3d-grid"></div>
+    <div class="ambient-glow" id="ambient-glow"></div>
+    
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <nav class="fixed w-full z-50 py-5 transition-all duration-300" id="navbar" style="transform: translate3d(0,0,0);">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <a href="#home" class="font-black text-2xl tracking-tighter hover:text-accent transition duration-300 nav-link interactive">Elite Sands.</a>
+            <div class="hidden md:flex space-x-10 text-sm font-semibold text-gray-600">
+                <a href="#home" class="hover:text-black hover:-translate-y-1 transition-transform duration-300 nav-link interactive">Home</a>
+                <a href="#about" class="hover:text-black hover:-translate-y-1 transition-transform duration-300 nav-link interactive">About Us</a>
+                <a href="#services" class="hover:text-black hover:-translate-y-1 transition-transform duration-300 nav-link interactive">Our Services</a>
+                <a href="#properties" class="hover:text-black hover:-translate-y-1 transition-transform duration-300 nav-link interactive">Properties</a>
+                <a href="#contact" class="hover:text-black hover:-translate-y-1 transition-transform duration-300 nav-link interactive">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-20 relative perspective-1000">
+        <div class="hero-anim preserve-3d" data-tilt data-tilt-max="10" data-tilt-speed="1000">
+            <span class="bg-accent text-accent px-5 py-2 rounded-full text-xs font-bold tracking-widest mb-8 inline-flex items-center gap-2 translate-z-50 shadow-sm interactive" style="background-color: var(--accent-bg); color: var(--accent);">
+                <i class="fas fa-home"></i> PREMIUM REAL ESTATE BROKER
+            </span>
+        </div>
+        
+        <h1 class="text-6xl md:text-8xl font-light mb-2 clip-text hero-title"><span>Elite Sands</span></h1>
+        <h2 class="text-5xl md:text-7xl font-black mb-8 clip-text hero-title"><span>Real Estate.</span></h2>
+        
+        <p class="text-gray-500 max-w-2xl mx-auto mb-12 text-lg md:text-xl leading-relaxed hero-anim">
+            Luxury living starts here. We connect you with exclusive properties, stunning coastal views, and high-return investment opportunities.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-5 hero-anim perspective-1000">
+            <a href="#properties" class="nav-link bg-black text-white px-10 py-4 rounded-full font-bold hover:bg-gray-800 transition-all duration-300 shadow-2xl interactive preserve-3d" data-tilt data-tilt-scale="1.05">
+                <span class="inline-block translate-z-50">Explore Properties</span>
+            </a>
+            <a href="#contact" class="nav-link glass-panel text-black px-10 py-4 rounded-full font-bold hover:bg-white transition-all duration-300 interactive preserve-3d" data-tilt data-tilt-scale="1.05">
+                <span class="inline-block translate-z-50">Consult an Agent &rarr;</span>
+            </a>
+        </div>
+    </section>
+
+    <section id="about" class="py-32 relative z-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-7xl md:text-9xl font-black text-center mb-16 tracking-tighter uppercase clip-text scroll-title opacity-10"><span>AGENCY</span></h2>
+            
+            <p class="text-center text-3xl md:text-4xl max-w-5xl mx-auto mb-24 leading-tight font-light text-gray-800 reveal-3d">
+                We redefine the real estate experience. Our mission is to match discerning clients with extraordinary homes and lucrative investments.
+            </p>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-24 perspective-1000">
+                <div class="glass-panel p-10 rounded-[2rem] tilt-card reveal-3d interactive" data-tilt data-tilt-max="12" data-tilt-speed="1000" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="translate-z-50">
+                        <div class="w-14 h-14 bg-black text-white rounded-2xl flex items-center justify-center mb-8 shadow-xl"><i class="fas fa-gem text-2xl"></i></div>
+                        <h3 class="font-bold text-2xl mb-4">Luxury Focus</h3>
+                        <p class="text-gray-500 leading-relaxed font-medium">We specialize in premium estates, luxury villas, and exclusive coastal apartments designed for exceptional living.</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-10 rounded-[2rem] tilt-card reveal-3d interactive" data-tilt data-tilt-max="12" data-tilt-speed="1000" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="translate-z-50">
+                        <div class="w-14 h-14 bg-black text-white rounded-2xl flex items-center justify-center mb-8 shadow-xl"><i class="fas fa-chart-line text-2xl"></i></div>
+                        <h3 class="font-bold text-2xl mb-4">Investment Strategy</h3>
+                        <p class="text-gray-500 leading-relaxed font-medium">Our expert consultants analyze market trends to secure properties that promise significant ROI and long-term value.</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-10 rounded-[2rem] tilt-card reveal-3d interactive" data-tilt data-tilt-max="12" data-tilt-speed="1000" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="translate-z-50">
+                        <div class="w-14 h-14 bg-black text-white rounded-2xl flex items-center justify-center mb-8 shadow-xl"><i class="fas fa-handshake text-2xl"></i></div>
+                        <h3 class="font-bold text-2xl mb-4">Client-Centric</h3>
+                        <p class="text-gray-500 leading-relaxed font-medium">From initial search to final signature, we provide a seamless, transparent, and highly personalized brokerage experience.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-10 text-center border-t border-gray-200 pt-20 reveal-3d" id="stats-section">
+                <div class="interactive" data-tilt data-tilt-scale="1.05" data-tilt-speed="1000"><h4 class="text-6xl md:text-7xl font-black text-accent mb-2" style="color: var(--accent);"><span class="counter" data-target="10">0</span>+</h4><p class="text-xs font-bold text-gray-400 tracking-widest uppercase">Years in Market</p></div>
+                <div class="interactive" data-tilt data-tilt-scale="1.05" data-tilt-speed="1000"><h4 class="text-6xl md:text-7xl font-black mb-2"><span class="counter" data-target="500">0</span>+</h4><p class="text-xs font-bold text-gray-400 tracking-widest uppercase">Properties Sold</p></div>
+                <div class="interactive" data-tilt data-tilt-scale="1.05" data-tilt-speed="1000"><h4 class="text-6xl md:text-7xl font-black mb-2"><span class="counter" data-target="98">0</span>%</h4><p class="text-xs font-bold text-gray-400 tracking-widest uppercase">Client Satisfaction</p></div>
+                <div class="interactive" data-tilt data-tilt-scale="1.05" data-tilt-speed="1000"><h4 class="text-6xl md:text-7xl font-black mb-2"><span class="counter" data-target="50">0</span>+</h4><p class="text-xs font-bold text-gray-400 tracking-widest uppercase">Exclusive Listings</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="py-32 bg-gray-50 relative z-10 rounded-[3rem] mx-4 md:mx-10 shadow-sm border border-gray-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-24 reveal-3d">
+                <span class="text-sm font-bold tracking-widest uppercase" style="color: var(--accent);">Our Expertise</span>
+                <h2 class="text-5xl md:text-6xl font-black mt-4">REAL ESTATE SERVICES</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-x-16 gap-y-20 perspective-1000">
+                <div class="reveal-3d tilt-card interactive p-6 rounded-3xl hover:bg-white transition-all duration-300" data-tilt data-tilt-max="8" data-tilt-speed="1000">
+                    <div class="translate-z-50">
+                        <i class="fas fa-key text-4xl mb-6" style="color: var(--accent);"></i>
+                        <h3 class="text-3xl font-bold mb-4">Property Buying & Selling</h3>
+                        <p class="text-gray-500 text-lg leading-relaxed">Expert negotiation and market analysis to help you buy your dream home or sell your property at the maximum market value.</p>
+                    </div>
+                </div>
+                <div class="reveal-3d tilt-card interactive p-6 rounded-3xl hover:bg-white transition-all duration-300" data-tilt data-tilt-max="8" data-tilt-speed="1000">
+                    <div class="translate-z-50">
+                        <i class="fas fa-building text-4xl mb-6" style="color: var(--accent);"></i>
+                        <h3 class="text-3xl font-bold mb-4">Commercial Real Estate</h3>
+                        <p class="text-gray-500 text-lg leading-relaxed">Strategic acquisition of commercial spaces, offices, and retail locations designed to elevate your business operations.</p>
+                    </div>
+                </div>
+                <div class="reveal-3d tilt-card interactive p-6 rounded-3xl hover:bg-white transition-all duration-300" data-tilt data-tilt-max="8" data-tilt-speed="1000">
+                    <div class="translate-z-50">
+                        <i class="fas fa-file-contract text-4xl mb-6" style="color: var(--accent);"></i>
+                        <h3 class="text-3xl font-bold mb-4">Property Management</h3>
+                        <p class="text-gray-500 text-lg leading-relaxed">Comprehensive management services ensuring your real estate assets are maintained, occupied, and generating consistent income.</p>
+                    </div>
+                </div>
+                <div class="reveal-3d tilt-card interactive p-6 rounded-3xl hover:bg-white transition-all duration-300" data-tilt data-tilt-max="8" data-tilt-speed="1000">
+                    <div class="translate-z-50">
+                        <i class="fas fa-search-location text-4xl mb-6" style="color: var(--accent);"></i>
+                        <h3 class="text-3xl font-bold mb-4">Investment Consultation</h3>
+                        <p class="text-gray-500 text-lg leading-relaxed">Tailored advice on emerging markets, off-plan projects, and portfolio diversification to maximize your real estate investments.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="properties" class="py-32 relative z-10 bg-gray-50 rounded-[3rem] mx-4 md:mx-10 shadow-inner mt-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-24 reveal-3d text-center md:text-left">
+                <span class="text-sm font-bold tracking-widest uppercase" style="color: var(--accent);">Exclusive Portfolio</span>
+                <h2 class="text-5xl md:text-6xl font-black mt-4">FEATURED PROPERTIES</h2>
+            </div>
+
+            <div class="space-y-32">
+                
+                <div class="flex flex-col md:flex-row gap-16 items-center reveal-3d">
+                    <div class="w-full md:w-1/2 perspective-1000 order-2 md:order-1">
+                        <span class="text-xs font-bold tracking-widest uppercase mb-4 block" style="color: var(--accent);">LISTING #1</span>
+                        <h3 class="text-4xl md:text-5xl font-black mb-6">Azure Seafront Villa</h3>
+                        <p class="text-gray-500 mb-8 text-lg leading-relaxed">A breathtaking 5-bedroom luxury villa offering panoramic ocean views, a private infinity pool, and state-of-the-art smart home integration.</p>
+                        <div class="flex flex-wrap gap-3 mb-10">
+                            <span class="px-5 py-2 bg-white border border-gray-200 font-bold rounded-full text-xs shadow-sm">5 Beds</span>
+                            <span class="px-5 py-2 bg-white border border-gray-200 font-bold rounded-full text-xs shadow-sm">6 Baths</span>
+                            <span class="px-5 py-2 bg-white border border-gray-200 font-bold rounded-full text-xs shadow-sm">650 sqm</span>
+                        </div>
+                        <a href="#contact" class="inline-flex items-center justify-center gap-3 bg-black text-white px-8 py-4 rounded-full font-bold hover:bg-gray-800 transition-all duration-300 shadow-xl interactive preserve-3d" data-tilt data-tilt-scale="1.05">
+                            <span class="translate-z-50">Inquire Now</span> <i class="fas fa-arrow-right translate-z-50"></i>
+                        </a>
+                    </div>
+                    <div class="w-full md:w-1/2 perspective-1000 order-1 md:order-2">
+                        <div class="w-full bg-gradient-to-tr from-gray-200 to-gray-100 rounded-[2rem] h-[450px] flex items-center justify-center shadow-2xl tilt-card interactive relative overflow-hidden" data-tilt data-tilt-max="6" data-tilt-speed="1000" data-tilt-glare data-tilt-max-glare="0.5">
+                             <div class="absolute inset-0 bg-cover bg-center opacity-40" style="background-image: url('https://images.unsplash.com/photo-1613490900233-fe4177d612f0?auto=format&fit=crop&q=80&w=800');"></div>
+                            <div class="tilt-content text-center translate-z-80 relative z-10">
+                                <h3 class="font-black text-5xl text-gray-900 drop-shadow-lg">Azure Villa</h3>
+                                <p class="text-gray-700 font-bold mt-2">$2,400,000</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-16 items-center reveal-3d">
+                    <div class="w-full md:w-1/2 perspective-1000">
+                        <div class="w-full bg-gradient-to-bl from-gray-100 to-gray-50 rounded-[2rem] h-[450px] flex items-center justify-center shadow-2xl tilt-card interactive relative overflow-hidden" data-tilt data-tilt-max="6" data-tilt-speed="1000" data-tilt-glare data-tilt-max-glare="0.5">
+                             <div class="absolute inset-0 bg-cover bg-center opacity-40" style="background-image: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=800');"></div>
+                            <div class="tilt-content text-center translate-z-80 relative z-10">
+                                <h3 class="font-black text-5xl text-gray-900 drop-shadow-lg uppercase tracking-widest">The Horizon</h3>
+                                <p class="text-gray-700 font-bold mt-2">Starting at $850,000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 perspective-1000">
+                        <span class="text-xs font-bold tracking-widest uppercase mb-4 block" style="color: var(--accent);">LISTING #2</span>
+                        <h3 class="text-4xl md:text-5xl font-black mb-6">The Horizon Penthouses</h3>
+                        <p class="text-gray-500 mb-8 text-lg leading-relaxed">Ultra-modern penthouses located in the heart of the city, featuring wrap-around terraces, concierge services, and exclusive club access.</p>
+                        <div class="flex flex-wrap gap-3 mb-10">
+                            <span class="px-5 py-2 bg-white border border-gray-200 font-bold rounded-full text-xs shadow-sm">3 Beds</span>
+                            <span class="px-5 py-2 bg-white border border-gray-200 font-bold rounded-full text-xs shadow-sm">City View</span>
+                            <span class="px-5 py-2 bg-white border border-gray-200 font-bold rounded-full text-xs shadow-sm">280 sqm</span>
+                        </div>
+                        <a href="#contact" class="inline-flex items-center justify-center gap-3 bg-black text-white px-8 py-4 rounded-full font-bold hover:bg-gray-800 transition-all duration-300 shadow-xl interactive preserve-3d" data-tilt data-tilt-scale="1.05">
+                            <span class="translate-z-50">Inquire Now</span> <i class="fas fa-arrow-right translate-z-50"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 relative z-10 text-center px-4 reveal-3d">
+        <span class="text-sm font-bold tracking-widest uppercase block mb-4" style="color: var(--accent);">YOUR NEXT MOVE</span>
+        <h2 class="text-6xl md:text-8xl font-black mb-12 tracking-tighter">FIND YOUR DREAM HOME</h2>
+        <p class="text-gray-500 max-w-2xl mx-auto text-xl mb-12">Looking to buy, sell, or invest? Our elite agents are ready to provide you with unparalleled service and market expertise.</p>
+        <div class="flex justify-center gap-4 perspective-1000">
+            <a href="#contact" class="nav-link inline-block text-white px-10 py-4 rounded-full font-bold transition-all duration-300 shadow-lg interactive preserve-3d" style="background-color: var(--accent);" data-tilt data-tilt-scale="1.05"><span class="translate-z-50">Contact an Agent &rarr;</span></a>
+        </div>
+    </section>
+
+    <section id="contact" class="py-32 relative z-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-5 gap-16">
+                <div class="md:col-span-2 space-y-6 reveal-3d perspective-1000">
+                    <h3 class="font-black text-2xl mb-8 uppercase tracking-widest text-gray-400">Get in Touch</h3>
+                    
+                    <div class="glass-panel p-6 rounded-2xl flex items-center gap-6 interactive tilt-card" data-tilt data-tilt-max="8" data-tilt-speed="1000">
+                        <div class="translate-z-50 flex items-center gap-6 w-full">
+                            <i class="fas fa-phone-alt text-4xl drop-shadow-md" style="color: var(--accent);"></i>
+                            <div><p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">Call Us</p><p class="font-black text-lg">+20 100 000 0000</p></div>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl flex items-center gap-6 interactive tilt-card" data-tilt data-tilt-max="8" data-tilt-speed="1000">
+                        <div class="translate-z-50 flex items-center gap-6 w-full">
+                            <i class="far fa-envelope text-4xl drop-shadow-md" style="color: var(--accent);"></i>
+                            <div class="overflow-hidden"><p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">Email</p><p class="font-black text-sm md:text-md truncate">info@elitesands.com</p></div>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl flex items-center gap-6 interactive tilt-card" data-tilt data-tilt-max="8" data-tilt-speed="1000">
+                        <div class="translate-z-50 flex items-center gap-6 w-full">
+                            <i class="fas fa-map-marker-alt text-4xl drop-shadow-md" style="color: var(--accent);"></i>
+                            <div><p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">Office</p><p class="font-black text-lg">Cairo, Egypt</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-3 reveal-3d perspective-1000">
+                    <div class="glass-panel p-10 md:p-14 rounded-[3rem] tilt-card shadow-2xl interactive" data-tilt data-tilt-max="2" data-tilt-speed="1000" data-tilt-glare data-tilt-max-glare="0.05">
+                        <form class="space-y-10 translate-z-50" onsubmit="event.preventDefault(); alert('Inquiry sent successfully!');">
+                            <div class="grid md:grid-cols-2 gap-10">
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Full Name</label>
+                                    <input type="text" required class="w-full bg-transparent border-b-2 border-gray-300 py-3 text-lg font-medium focus:outline-none transition-colors" style="border-color: var(--accent);" placeholder="John Doe">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Phone Number</label>
+                                    <input type="tel" required class="w-full bg-transparent border-b-2 border-gray-300 py-3 text-lg font-medium focus:outline-none transition-colors" style="border-color: var(--accent);" placeholder="+20 123 456 7890">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Property Interest</label>
+                                <select class="w-full bg-transparent border-b-2 border-gray-300 py-3 text-lg font-medium focus:outline-none transition-colors appearance-none" style="border-color: var(--accent);">
+                                    <option>Buying a Property</option>
+                                    <option>Selling a Property</option>
+                                    <option>Investment Consultation</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Additional Details</label>
+                                <textarea class="w-full bg-transparent border-b-2 border-gray-300 py-3 text-lg font-medium focus:outline-none transition-colors resize-none" style="border-color: var(--accent);" rows="4" placeholder="Tell us what you are looking for..."></textarea>
+                            </div>
+                            <button type="submit" class="bg-black text-white w-full py-6 rounded-2xl font-black text-xl hover:bg-gray-800 hover:-translate-y-1 transition-all duration-300 shadow-2xl flex justify-center items-center gap-3 interactive">
+                                Send Inquiry <i class="far fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
+    <script>
+        gsap.set(".cursor-dot", {xPercent: -50, yPercent: -50});
+        gsap.set(".cursor-outline", {xPercent: -50, yPercent: -50});
+        gsap.set(".ambient-glow", {xPercent: -50, yPercent: -50});
+
+        let xToDot = gsap.quickTo(".cursor-dot", "x", {duration: 0.05, ease: "power3"});
+        let yToDot = gsap.quickTo(".cursor-dot", "y", {duration: 0.05, ease: "power3"});
+        let xToOutline = gsap.quickTo(".cursor-outline", "x", {duration: 0.2, ease: "power3"});
+        let yToOutline = gsap.quickTo(".cursor-outline", "y", {duration: 0.2, ease: "power3"});
+        let xToGlow = gsap.quickTo(".ambient-glow", "x", {duration: 0.5, ease: "power3"});
+        let yToGlow = gsap.quickTo(".ambient-glow", "y", {duration: 0.5, ease: "power3"});
+
+        window.addEventListener("mousemove", e => {
+            xToDot(e.clientX);
+            yToDot(e.clientY);
+            xToOutline(e.clientX);
+            yToOutline(e.clientY);
+            xToGlow(e.clientX);
+            yToGlow(e.clientY);
+        });
+
+        document.querySelectorAll('.interactive').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                document.querySelector('.cursor-outline').style.width = '70px';
+                document.querySelector('.cursor-outline').style.height = '70px';
+                document.querySelector('.cursor-outline').style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+                document.querySelector('.cursor-outline').style.borderColor = 'transparent';
+                document.querySelector('.cursor-dot').style.transform = 'translate3d(-50%, -50%, 0) scale(1.5)';
+            });
+            el.addEventListener('mouseleave', () => {
+                document.querySelector('.cursor-outline').style.width = '50px';
+                document.querySelector('.cursor-outline').style.height = '50px';
+                document.querySelector('.cursor-outline').style.backgroundColor = 'transparent';
+                document.querySelector('.cursor-outline').style.borderColor = 'var(--accent)';
+                document.querySelector('.cursor-dot').style.transform = 'translate3d(-50%, -50%, 0) scale(1)';
+            });
+        });
+
+        const lenis = new Lenis({
+            duration: 0.5,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+            smoothWheel: true,
+            wheelMultiplier: 2.5,
+            touchMultiplier: 2.5
+        });
+
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+
+        document.querySelectorAll('.nav-link').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                lenis.scrollTo(targetId, { offset: -100, duration: 1 });
+            });
+        });
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        const heroTl = gsap.timeline();
+        heroTl.fromTo(".hero-title span", 
+            { y: "100%", rotationX: -50, opacity: 0 },
+            { y: "0%", rotationX: 0, opacity: 1, duration: 1.2, ease: "power3.out", stagger: 0.1, delay: 0.1 }
+        )
+        .fromTo(".hero-anim", 
+            { y: 60, rotationX: -30, opacity: 0, scale: 0.95 },
+            { y: 0, rotationX: 0, opacity: 1, scale: 1, duration: 1, ease: "power3.out", stagger: 0.1 }, 
+            "-=0.8"
+        );
+
+        gsap.utils.toArray('.reveal-3d').forEach(element => {
+            gsap.fromTo(element, 
+                { opacity: 0, y: 100, rotationX: -15, scale: 0.95 },
+                {
+                    scrollTrigger: { 
+                        trigger: element, 
+                        start: "top 85%",
+                        toggleActions: "play none none reverse" 
+                    },
+                    opacity: 1, y: 0, rotationX: 0, scale: 1, duration: 1, ease: "power3.out"
+                }
+            );
+        });
+
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            let obj = { val: 0 };
+            
+            gsap.to(obj, {
+                val: target,
+                duration: 1.5,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: "#stats-section",
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
+                },
+                onUpdate: function() {
+                    counter.innerText = Math.ceil(obj.val);
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-sm');
+                navbar.style.background = 'rgba(255, 255, 255, 0.9)';
+                navbar.style.padding = '12px 0';
+            } else {
+                navbar.classList.remove('shadow-sm');
+                navbar.style.background = 'transparent';
+                navbar.style.padding = '20px 0';
+            }
+        });
+    </script>
+</body>
+</html>
